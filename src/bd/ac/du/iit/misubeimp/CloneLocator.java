@@ -5,6 +5,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -64,15 +69,20 @@ public class CloneLocator {
 		for (ClonePair x : clonePairs) {
 			CloneCode one = x.getFirstClone();
 			String oneCode=getCloneCode(one.getFilePath(basePath),one.getStartLine(),one.getEndLise());
-			System.out.println(oneCode);
 			one.setActualCode(oneCode);
 			CloneCode two = x.getSecondClone();
 			String twoCode=getCloneCode(two.getFilePath(basePath),two.getStartLine(),two.getEndLise());
 			two.setActualCode(twoCode);
-			System.out.println(twoCode);
-			
+			x.setCloneFirstLine();
 		}
 		return clonePairs;
 
 	}
+	public static void writeToFile(String text, String targetFilePath) throws IOException
+	{
+	    Path targetPath = Paths.get(targetFilePath);
+	    byte[] bytes = text.getBytes(StandardCharsets.UTF_8);
+	    Files.write(targetPath, bytes, StandardOpenOption.CREATE);
+	}
+	
 }
